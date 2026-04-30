@@ -33,14 +33,13 @@ export async function updateSession(request: NextRequest) {
   const isPublicPage = url.pathname === '/'
 
   if (!user && !isAuthPage && !isPublicPage) {
-    // MVP: Bypass login
-    // url.pathname = '/login'
-    // return NextResponse.redirect(url)
+    url.pathname = '/login'
+    return NextResponse.redirect(url)
   }
 
   if (user && isAuthPage) {
-    // url.pathname = '/dashboard'
-    // return NextResponse.redirect(url)
+    url.pathname = '/dashboard'
+    return NextResponse.redirect(url)
   }
 
   return supabaseResponse

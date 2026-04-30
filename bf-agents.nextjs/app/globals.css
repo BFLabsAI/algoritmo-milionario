@@ -57,11 +57,55 @@ html, body {
 @keyframes pulse-dot { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+@keyframes aurora {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes orbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes nucleus-pulse {
+  0%, 100% { box-shadow: 0 0 12px 4px rgba(139,92,246,0.6), 0 0 32px 8px rgba(59,130,246,0.3); transform: scale(1); }
+  50%       { box-shadow: 0 0 20px 8px rgba(139,92,246,0.8), 0 0 48px 12px rgba(59,130,246,0.4); transform: scale(1.15); }
+}
+@keyframes pulse-dot-scale {
+  0%, 100% { opacity: 0.5; transform: scale(0.8); }
+  50%      { opacity: 1; transform: scale(1.2); }
+}
+
+.aurora-bg {
+  background: linear-gradient(135deg, rgba(59,130,246,0.04), rgba(139,92,246,0.06), rgba(14,165,233,0.04));
+  background-size: 400% 400%;
+  animation: aurora 15s ease-in-out infinite alternate;
 }
 
 .fade-in { animation: fadeIn 0.3s ease forwards; }
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- RESPONSIVE UTILS ---- */
+@media (max-width: 768px) {
+  .hide-mobile { display: none !important; }
+}
+@media (min-width: 769px) {
+  .hide-desktop { display: none !important; }
+}
 
 /* ---- BUTTONS ---- */
 .btn {

@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "boost-prompt": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "2621a44fbd9fc2636953d1e6e39e5faeed995f7fb958ec12cc98a2f0576f6fa7"
+    },
+    "enhance-prompt": {
+      "source": "google-labs-code/stitch-skills",
+      "sourceType": "github",
+      "computedHash": "71cc23e9ec5fc6361e12453495fa8c683f6cf26f3efaf9b230b0f43e0a32cc96"
+    },
+    "finalize-agent-prompt": {
+      "source": "github/awesome-copilot",
+      "sourceType": "github",
+      "computedHash": "a72bea0359d7f69295a28e9f4b94c5dc6fc093930dae663d8c7bab294ea287d3"
+    },
+    "prompt-optimizer": {
+      "source": "affaan-m/everything-claude-code",
+      "sourceType": "github",
+      "computedHash": "f562081432bee2c19ff19580f62121eadb056420b14e81db0cfb87d8535a9e8a"
+    }
+  }
+}

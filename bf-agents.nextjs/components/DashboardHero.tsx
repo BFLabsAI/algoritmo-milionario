@@ -82,8 +82,17 @@ const IA_CARDS = [
   },
 ]
 
+type ServiceCardData = {
+  href: string
+  label: string
+  desc: string
+  img: string
+  accent: string
+  btn: string
+}
+
 // Componente Card reutilizável
-function ServiceCard({ card }: { card: any }) {
+function ServiceCard({ card }: { card: ServiceCardData }) {
   return (
     <Link href={card.href} style={{ textDecoration: 'none', color: '#fff', display: 'block' }}>
       <div
@@ -213,7 +222,7 @@ export default function DashboardHero() {
         {/* Welcome */}
         <FadeInUp delay={0}>
           <h1 style={{ fontSize: 28, fontWeight: 700, margin: '0 0 24px', color: '#fff' }}>
-            Olá, bem vindo ao Algoritmo Milionário.
+            Olá, bem-vindo ao Algoritmo Milionário.
           </h1>
         </FadeInUp>
 

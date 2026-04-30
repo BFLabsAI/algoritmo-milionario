@@ -10,18 +10,57 @@ export const openrouter = new OpenAI({
   },
 })
 
-// Mapeamento do modelo próprio para o modelo base
-export const MILLION_AI_CONFIG = {
-  openrouter_model: 'openai/gpt-4o',
-  system_prompt: `Você é a Million AI, uma inteligência artificial especializada em criação de infoprodutos, copywriting e marketing digital brasileiro. Você é estratégica, direta e focada em resultados. Você conhece profundamente o ecossistema de infoprodutos no Brasil: Hotmart, Kiwify, Monetizze, lançamentos digitais, PLF (Product Launch Formula), funis de vendas, copywriting de resposta direta e tráfego pago. Você fala em português brasileiro natural, usa exemplos práticos e sempre orienta para resultados mensuráveis. Seja sempre útil, objetiva e focada em resultados práticos para o empreendedor digital brasileiro.`,
+const SCALE_AI_SYSTEM_PROMPT = `Você é a Scale AI PRO, uma inteligência artificial especializada em criação de infoprodutos, copywriting e marketing digital brasileiro. Você é estratégica, direta e focada em resultados. Você conhece profundamente o ecossistema de infoprodutos no Brasil: Hotmart, Kiwify, Monetizze, lançamentos digitais, PLF (Product Launch Formula), funis de vendas, copywriting de resposta direta e tráfego pago. Você fala em português brasileiro natural, usa exemplos práticos e sempre orienta para resultados mensuráveis. Seja sempre útil, objetiva e focada em resultados práticos para o empreendedor digital brasileiro.`
+
+// Display slug → { real OpenRouter model, optional system prompt override }
+// Display names shown to users are marketing names; actual models are cost-optimized.
+const MODEL_ALIASES: Record<string, { model: string; extraSystemPrompt?: string }> = {
+  'scale-ai-pro': {
+    model: 'google/gemini-2.5-flash-lite',
+    extraSystemPrompt: SCALE_AI_SYSTEM_PROMPT,
+  },
+  'gemini-3': {
+    model: 'google/gemini-2.5-flash-lite',
+  },
+  'grok-4.1-fast': {
+    model: 'x-ai/grok-3-mini-beta',
+  },
+  'gpt-5.4': {
+    model: 'openai/gpt-4.1-mini',
+  },
 }
 
+// All valid display slugs accepted by the API
+export const ALLOWED_MODEL_SLUGS = Object.keys(MODEL_ALIASES)
+
 export function resolveModel(modelSlug: string): { model: string; extraSystemPrompt?: string } {
-  if (modelSlug === 'million-ai-1.0') {
-    return {
-      model: MILLION_AI_CONFIG.openrouter_model,
-      extraSystemPrompt: MILLION_AI_CONFIG.system_prompt,
-    }
-  }
-  return { model: modelSlug }
+  return MODEL_ALIASES[modelSlug] ?? { model: modelSlug }
 }
+
+// Model catalog for the frontend — what users see
+export const MODEL_CATALOG = [
+  {
+    slug: 'scale-ai-pro',
+    display_name: 'Scale AI PRO',
+    badge: 'Exclusivo',
+    required_plan: 'free',
+  },
+  {
+    slug: 'gemini-3',
+    display_name: 'Gemini 3',
+    badge: 'Rápido',
+    required_plan: 'pro',
+  },
+  {
+    slug: 'grok-4.1-fast',
+    display_name: 'Grok 4.1 Fast',
+    badge: 'Novo',
+    required_plan: 'pro',
+  },
+  {
+    slug: 'gpt-5.4',
+    display_name: 'GPT 5.4',
+    badge: 'Favorito',
+    required_plan: 'pro',
+  },
+]

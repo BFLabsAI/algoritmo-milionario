@@ -1,12 +1,22 @@
-// app/api/chat/route.ts — Streaming via OpenRouter
+// app/api/chat/route.ts — Streaming via AI SDK v6 + OpenRouter
 import { z } from 'zod'
+import { streamText } from 'ai'
+import { createOpenRouter } from '@openrouter/ai-sdk-provider'
 import { createAdminClient } from '@/lib/supabase/server'
-import { openrouter, resolveModel } from '@/lib/openrouter'
+import { resolveModel, ALLOWED_MODEL_SLUGS } from '@/lib/openrouter'
+
+const openrouterProvider = createOpenRouter({
+  apiKey: process.env.OPENROUTER_API_KEY!,
+  headers: {
+    'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
+    'X-Title': 'Algoritmo Milionário',
+  },
+})
 
 const ChatSchema = z.object({
   message:        z.string().min(1).max(4000).trim(),
   conversationId: z.string().uuid().optional(),
-  model:          z.string().min(1),
+  model:          z.enum(ALLOWED_MODEL_SLUGS as [string, ...string[]]),
   agentId:        z.string().uuid().optional().nullable(),
 })
 
@@ -28,7 +38,7 @@ export async function POST(req: Request) {
   const { message, conversationId, model, agentId } = parsed.data
 
   // 3. Verifica limite de uso
-  const { data: withinLimit } = await supabase.rpc('check_usage_limit_am', {
+  const { data: withinLimit } = await supabase.rpc('check_usage_limit', {
     p_user_id: user.id,
     p_feature: 'chat_messages',
   })
@@ -71,62 +81,31 @@ export async function POST(req: Request) {
     history = msgs ?? []
   }
 
-  // 8. Chama OpenRouter com stream
-  let stream: AsyncIterable<{ choices: { delta: { content?: string } }[]; usage?: { total_tokens?: number } }>
-  try {
-    stream = await openrouter.chat.completions.create({
-      model: resolvedModel,
-      stream: true,
-      messages: [
-        { role: 'system', content: systemPrompt },
-        ...history.map(h => ({ role: h.role as 'user' | 'assistant', content: h.content })),
-        { role: 'user', content: message },
-      ],
-    }) as never
-  } catch (err: unknown) {
-    const msg = err instanceof Error ? err.message : 'Erro ao conectar com a IA'
-    return new Response(msg, { status: 502 })
-  }
-
-  // 9. Retorna ReadableStream + salva mensagens após terminar
-  const readable = new ReadableStream({
-    async start(controller) {
-      let fullResponse = ''
-      let totalTokens = 0
-
-      // Envia o conversationId como primeiro chunk para o cliente referenciar
-      controller.enqueue(new TextEncoder().encode(`__CONV_ID__${convId}__\n`))
-
-      try {
-        for await (const chunk of stream) {
-          const text = chunk.choices[0]?.delta?.content ?? ''
-          fullResponse += text
-          if (chunk.usage?.total_tokens) totalTokens = chunk.usage.total_tokens
-          if (text) controller.enqueue(new TextEncoder().encode(text))
-        }
-      } catch { /* stream ended */ }
-
-      // Salva mensagens e incrementa uso em paralelo
+  // 8. Chama OpenRouter com stream via AI SDK v6
+  const result = streamText({
+    model: openrouterProvider(resolvedModel),
+    system: systemPrompt,
+    messages: [
+      ...history.map(h => ({ role: h.role as 'user' | 'assistant', content: h.content })),
+      { role: 'user', content: message },
+    ],
+    abortSignal: req.signal,
+    onFinish: async ({ text, usage }) => {
       if (convId) {
         await Promise.allSettled([
           supabase.from('messages_algoritmo_milionario').insert([
             { conversation_id: convId, user_id: user.id, role: 'user', content: message, model_slug: model },
-            { conversation_id: convId, user_id: user.id, role: 'assistant', content: fullResponse, tokens_used: totalTokens, model_slug: resolvedModel },
+            { conversation_id: convId, user_id: user.id, role: 'assistant', content: text, tokens_used: usage?.totalTokens, model_slug: resolvedModel },
           ]),
           supabase.from('conversations_algoritmo_milionario').update({ updated_at: new Date().toISOString() }).eq('id', convId),
-          supabase.rpc('increment_usage_am', { p_user_id: user.id, p_feature: 'chat_messages' }),
+          supabase.rpc('increment_usage', { p_user_id: user.id, p_feature: 'chat_messages' }),
         ])
       }
-
-      controller.close()
     },
   })
 
-  return new Response(readable, {
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Transfer-Encoding': 'chunked',
-      'X-Conversation-Id': convId ?? '',
-    },
-  })
+  // 9. Retorna stream com conversation ID no header
+  const response = result.toTextStreamResponse()
+  response.headers.set('X-Conversation-Id', convId ?? '')
+  return response
 }
