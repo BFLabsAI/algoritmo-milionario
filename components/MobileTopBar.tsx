@@ -6,22 +6,26 @@ interface MobileTopBarProps {
 
 export default function MobileTopBar({ onMenuOpen }: MobileTopBarProps) {
   return (
-    <header
-      className="md:hidden"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 12,
-        padding: '0 16px',
-        height: 56,
-        background: '#08090f',
-        borderBottom: '1px solid rgba(255,255,255,0.06)',
-        position: 'sticky',
-        top: 0,
-        zIndex: 30,
-        flexShrink: 0,
-      }}
-    >
+    <>
+      <style>{`
+        .mobile-top-bar { display: none; }
+        @media (max-width: 767px) { .mobile-top-bar { display: flex; } }
+      `}</style>
+      <header
+        className="mobile-top-bar"
+        style={{
+          alignItems: 'center',
+          gap: 12,
+          padding: '0 16px',
+          height: 56,
+          background: '#08090f',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+          position: 'sticky',
+          top: 0,
+          zIndex: 30,
+          flexShrink: 0,
+        }}
+      >
       <button
         onClick={onMenuOpen}
         aria-label="Abrir menu de navegação"
@@ -70,5 +74,6 @@ export default function MobileTopBar({ onMenuOpen }: MobileTopBarProps) {
         </span>
       </div>
     </header>
+    </>
   )
 }
