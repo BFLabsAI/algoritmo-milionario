@@ -12,7 +12,9 @@ import {
   Check,
   ChevronDown,
   X,
+  History,
 } from 'lucide-react'
+import DrawerBackdrop from '@/components/DrawerBackdrop'
 
 const MODELS = [
   { slug: 'scale-ai-pro', label: 'Scale AI PRO', badge: 'Padrão', color: '#8b5cf6' },
@@ -63,6 +65,7 @@ export default function ChatPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [hoveredMsgId, setHoveredMsgId] = useState<string | null>(null)
   const [sendHovered, setSendHovered] = useState(false)
+  const [chatHistoryOpen, setChatHistoryOpen] = useState(false)
 
   const bottomRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -279,15 +282,24 @@ export default function ChatPage() {
   const sendActive = Boolean(inputValue.trim()) && !streaming
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%', position: 'relative' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', flex: 1, minHeight: 0 }}>
+      <style>{`
+        .chat-history-btn { display: none; }
+        @media (max-width: 767px) { .chat-history-btn { display: flex; } }
+      `}</style>
+
+      <DrawerBackdrop isOpen={chatHistoryOpen} onClose={() => setChatHistoryOpen(false)} />
+
       <ChatHistorySidebar
         activeCid={convId}
         onSelect={handleSelectConversation}
         refreshKey={historyKey}
+        isOpen={chatHistoryOpen}
+        onClose={() => setChatHistoryOpen(false)}
       />
     <div
       style={{
-        position: 'relative', flex: 1, height: '100%',
+        position: 'relative', flex: 1, minHeight: 0,
         background: `radial-gradient(ellipse at 20% 50%, #1a0533 0%, transparent 50%),
                      radial-gradient(ellipse at 80% 20%, #0a1628 0%, transparent 50%),
                      radial-gradient(ellipse at 50% 80%, #0d2137 0%, transparent 50%),
@@ -305,9 +317,24 @@ export default function ChatPage() {
       )}
 
       {/* Top Bar */}
-      <div style={{ width: '100%', padding: '12px 16px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 8, position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end', minWidth: 0, flex: 1 }}>
-        <div className="toolbar-rail" style={{ flex: 1, justifyContent: 'flex-end', padding: '4px 2px' }}>
+      <div style={{ width: '100%', padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8, position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
+        {/* History toggle — mobile only */}
+        <button
+          className="chat-history-btn"
+          onClick={() => setChatHistoryOpen(true)}
+          aria-label="Histórico de conversas"
+          style={{
+            flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: 40, height: 40, borderRadius: 10, cursor: 'pointer',
+            background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+            color: '#94a3b8',
+          }}
+        >
+          <History size={17} />
+        </button>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0, flex: 1 }}>
+        <div className="toolbar-rail" style={{ flex: 1, padding: '4px 2px' }}>
           {MODELS.map(m => {
             const active = model === m.slug
             return (
@@ -358,7 +385,7 @@ export default function ChatPage() {
           </div>
         </>
       ) : (
-        <div style={{ flex: 1, width: '100%', maxWidth: 800, padding: '80px 24px 24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 24, zIndex: 5 }}>
+        <div style={{ flex: 1, minHeight: 0, width: '100%', maxWidth: 800, padding: '80px 24px 24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 24, zIndex: 5 }}>
           {messages.map(msg => {
             const isAssistant = msg.role === 'assistant'
             const showCopy = isAssistant && msg.content.length > 0
@@ -439,7 +466,7 @@ export default function ChatPage() {
       )}
 
       {/* Input Box */}
-      <div style={{ width: '100%', maxWidth: 800, padding: '0 16px', paddingBottom: 'max(24px, env(safe-area-inset-bottom, 12px))', marginBottom: messages.length === 0 ? 'clamp(40px, 10vh, 80px)' : 0, zIndex: 10 }}>
+      <div style={{ flexShrink: 0, width: '100%', maxWidth: 800, padding: '0 16px', paddingBottom: 'max(24px, env(safe-area-inset-bottom, 12px))', marginBottom: messages.length === 0 ? 'clamp(40px, 10vh, 80px)' : 0, zIndex: 10 }}>
         {/* Agent Selector — above input */}
         <div ref={dropdownRef} style={{ position: 'relative', marginBottom: 10, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}>
           <span style={{ fontSize: 11, fontWeight: 600, color: '#94a3b8', letterSpacing: '0.6px', textTransform: 'uppercase', paddingLeft: 4 }}>

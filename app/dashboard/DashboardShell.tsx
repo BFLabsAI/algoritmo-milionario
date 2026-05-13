@@ -17,7 +17,7 @@ export default function DashboardShell({ user, children }: DashboardShellProps) 
     <div
       style={{
         display: 'flex',
-        minHeight: '100dvh',
+        height: '100dvh',
         background: 'var(--bg)',
         overflow: 'hidden',
       }}
