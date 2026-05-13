@@ -25,12 +25,11 @@ export default function LoginPage() {
       <div style={{ width: '100%', maxWidth: 420 }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <div style={{
-            width: 52, height: 52, borderRadius: 14,
-            background: 'linear-gradient(135deg, var(--accent), var(--purple))',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 24, fontWeight: 900, color: '#fff', margin: '0 auto 16px',
-          }}>M</div>
+          <img
+            src="/logo-full.webp"
+            alt="Algoritmo Milionário"
+            style={{ width: 180, height: 'auto', margin: '0 auto 24px', display: 'block' }}
+          />
           <h1 style={{ fontSize: 22, fontWeight: 700 }}>Entrar na plataforma</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: 14, marginTop: 6 }}>Continue onde parou</p>
         </div>

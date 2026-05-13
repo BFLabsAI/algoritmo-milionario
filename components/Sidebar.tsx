@@ -27,7 +27,7 @@ const NAV = [
   { href: '/dashboard/prompts',         icon: Zap,            label: 'Biblioteca de Prompts' },
   { href: '/dashboard/planejador',      icon: CalendarDays,   label: 'Planejador Social' },
   { href: '/dashboard/criador-produto', icon: Lightbulb,      label: 'Criador de Produtos' },
-  { href: '/dashboard/analisador',      icon: ScanSearch,     label: 'Analista de Oferta'},
+  { href: '/dashboard/analisador',      icon: ScanSearch,     label: 'Analista de Ofertas'},
 ]
 
 export default function Sidebar({ user }: { user: User }) {
@@ -75,18 +75,11 @@ export default function Sidebar({ user }: { user: User }) {
             href="/dashboard"
             style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}
           >
-            <div
-              style={{
-                width: 38, height: 38, borderRadius: 12,
-                background: 'linear-gradient(135deg, #4cc9f0 0%, #3a86ff 50%, #8b5cf6 100%)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 17, fontWeight: 800, color: '#fff', flexShrink: 0,
-                boxShadow: '0 8px 24px rgba(59,130,246,0.35), 0 0 0 1px rgba(255,255,255,0.06) inset',
-                fontFamily: "'Plus Jakarta Sans','Inter',sans-serif",
-              }}
-            >
-              SA
-            </div>
+            <img
+              src="/logo-icon.webp"
+              alt="Algoritmo Milionário"
+              style={{ width: 38, height: 38, borderRadius: 12, flexShrink: 0, objectFit: 'contain' }}
+            />
             <div style={{ minWidth: 0 }}>
               <div
                 style={{

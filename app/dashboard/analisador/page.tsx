@@ -699,7 +699,7 @@ export default function AnalisadorPage() {
               margin: '0 0 10px',
             }}
           >
-            Analista de Oferta
+            Analista de Ofertas
           </h1>
           <p style={{ color: '#94a3b8', fontSize: 15, lineHeight: 1.7, margin: '0 auto', maxWidth: 760 }}>
             Cole apenas a URL. Nossos agentes acessam a página, analisam cada detalhe e geram uma análise completa da oferta.

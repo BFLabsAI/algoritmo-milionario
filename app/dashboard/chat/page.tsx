@@ -349,22 +349,13 @@ export default function ChatPage() {
 
       {messages.length === 0 ? (
         <>
-          <div style={{ flex: 1, width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', marginTop: 40, position: 'relative', zIndex: 1 }}>
-            <h1
-              style={{
-                fontFamily: 'Plus Jakarta Sans, sans-serif',
-                fontSize: 52, fontWeight: 800, letterSpacing: '-0.03em',
-                background: 'linear-gradient(135deg, #ffffff 0%, #94a3b8 100%)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-              }}
-            >
-              Algoritmo Milionário
-            </h1>
-            <p style={{ marginTop: 12, color: '#94a3b8', fontSize: 16 }}>
-              Construa algo incrível — comece a digitar abaixo.
-            </p>
+          <div style={{ flex: 1, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', zIndex: 1, paddingTop: 70 }}>
+            <img
+              src="/logo-full.webp"
+              alt="Algoritmo Milionário"
+              style={{ width: 300, height: 'auto', opacity: 0.92 }}
+            />
           </div>
-          <div style={{ flex: 1 }} />
         </>
       ) : (
         <div style={{ flex: 1, width: '100%', maxWidth: 800, padding: '80px 24px 24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 24, zIndex: 5 }}>
