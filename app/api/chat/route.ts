@@ -14,10 +14,12 @@ const openrouterProvider = createOpenRouter({
 })
 
 const ChatSchema = z.object({
-  message:        z.string().min(1).max(4000).trim(),
+  message:        z.string().max(4000).trim().optional().default(''),
   conversationId: z.string().uuid().optional(),
   model:          z.enum(ALLOWED_MODEL_SLUGS as [string, ...string[]]),
   agentId:        z.string().uuid().optional().nullable(),
+  imageBase64:    z.string().max(10_000_000).optional(),
+  imageMimeType:  z.string().optional(),
 })
 
 export async function POST(req: Request) {
@@ -35,7 +37,8 @@ export async function POST(req: Request) {
   const parsed = ChatSchema.safeParse(body)
   if (!parsed.success) return new Response('Invalid payload', { status: 400 })
 
-  const { message, conversationId, model, agentId } = parsed.data
+  const { message, conversationId, model, agentId, imageBase64, imageMimeType } = parsed.data
+  if (!message && !imageBase64) return new Response('Mensagem ou imagem obrigatória', { status: 400 })
 
   // 3. Verifica limite de uso
   const { data: withinLimit } = await supabase.rpc('check_usage_limit', {
@@ -82,19 +85,27 @@ export async function POST(req: Request) {
   }
 
   // 8. Chama OpenRouter com stream via AI SDK v6
+  const userTextForDb = message || '[Imagem enviada]'
+  const userContent = imageBase64
+    ? [
+        ...(message ? [{ type: 'text' as const, text: message }] : []),
+        { type: 'image' as const, image: imageBase64, mimeType: (imageMimeType ?? 'image/jpeg') as `image/${string}` },
+      ]
+    : message
+
   const result = streamText({
     model: openrouterProvider(resolvedModel),
     system: systemPrompt,
     messages: [
       ...history.map(h => ({ role: h.role as 'user' | 'assistant', content: h.content })),
-      { role: 'user', content: message },
+      { role: 'user', content: userContent },
     ],
     abortSignal: req.signal,
     onFinish: async ({ text, usage }) => {
       if (convId) {
         await Promise.allSettled([
           supabase.from('messages_algoritmo_milionario').insert([
-            { conversation_id: convId, user_id: user.id, role: 'user', content: message, model_slug: model },
+            { conversation_id: convId, user_id: user.id, role: 'user', content: userTextForDb, model_slug: model },
             { conversation_id: convId, user_id: user.id, role: 'assistant', content: text, tokens_used: usage?.totalTokens, model_slug: resolvedModel },
           ]),
           supabase.from('conversations_algoritmo_milionario').update({ updated_at: new Date().toISOString() }).eq('id', convId),

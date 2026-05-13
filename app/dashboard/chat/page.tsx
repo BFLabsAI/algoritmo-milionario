@@ -66,6 +66,9 @@ export default function ChatPage() {
   const [hoveredMsgId, setHoveredMsgId] = useState<string | null>(null)
   const [sendHovered, setSendHovered] = useState(false)
   const [chatHistoryOpen, setChatHistoryOpen] = useState(false)
+  const [imageFile, setImageFile] = useState<{ base64: string; dataUrl: string; mimeType: string } | null>(null)
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const bottomRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -170,12 +173,27 @@ export default function ChatPage() {
     el.style.height = `${Math.max(48, Math.min(el.scrollHeight, 150))}px`
   }, [])
 
+  function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    if (!file) return
+    if (file.size > 5 * 1024 * 1024) { setError('Imagem muito grande. Máximo 5MB.'); return }
+    const reader = new FileReader()
+    reader.onload = ev => {
+      const dataUrl = ev.target?.result as string
+      setImageFile({ base64: dataUrl.split(',')[1], dataUrl, mimeType: file.type })
+    }
+    reader.readAsDataURL(file)
+    e.target.value = ''
+  }
+
   const handleSend = useCallback(async (overrideMsg?: string | React.MouseEvent) => {
     const text = (typeof overrideMsg === 'string' ? overrideMsg : inputValue).trim()
-    if (!text || streaming) return
+    const currentImage = imageFile
+    if (!text && !currentImage || streaming) return
 
     setError(null)
     setInputValue('')
+    setImageFile(null)
     if (textareaRef.current) textareaRef.current.style.height = '48px'
 
     const userMsgId = uid()
@@ -206,6 +224,7 @@ export default function ChatPage() {
           model,
           ...(convIdRef.current ? { conversationId: convIdRef.current } : {}),
           ...(agentIdRef.current ? { agentId: agentIdRef.current } : {}),
+          ...(currentImage ? { imageBase64: currentImage.base64, imageMimeType: currentImage.mimeType } : {}),
         }),
         signal: controller.signal,
       })
@@ -279,7 +298,7 @@ export default function ChatPage() {
     if (cidFromUrl) router.replace(pathname)
   }
 
-  const sendActive = Boolean(inputValue.trim()) && !streaming
+  const sendActive = (Boolean(inputValue.trim()) || Boolean(imageFile)) && !streaming
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row', flex: 1, minHeight: 0 }}>
@@ -488,7 +507,9 @@ export default function ChatPage() {
             <span style={{ fontSize: 14 }}>
               {selectedAgent ? (CATEGORY_ICONS[selectedAgent.category ?? 'geral'] ?? '🤖') : '🧠'}
             </span>
-            <span>{selectedAgent ? selectedAgent.name : 'Sem agente'}</span>
+            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 'clamp(80px, 35vw, 200px)', display: 'inline-block' }}>
+              {selectedAgent ? selectedAgent.name : 'Sem agente'}
+            </span>
             {selectedAgent && (
               <span
                 role="button"
@@ -584,6 +605,42 @@ export default function ChatPage() {
           )}
         </div>
 
+        {/* Hidden file input — images only */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={handleFileSelect}
+        />
+
+        {/* Image preview */}
+        {imageFile && (
+          <div style={{ marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ position: 'relative', display: 'inline-flex' }}>
+              <img
+                src={imageFile.dataUrl}
+                alt="Preview"
+                style={{ height: 64, width: 'auto', maxWidth: 120, borderRadius: 8, objectFit: 'cover', border: '1px solid rgba(255,255,255,0.15)' }}
+              />
+              <button
+                onClick={() => setImageFile(null)}
+                aria-label="Remover imagem"
+                style={{
+                  position: 'absolute', top: -6, right: -6,
+                  width: 20, height: 20, borderRadius: '50%',
+                  background: 'rgba(239,68,68,0.9)', border: 'none',
+                  color: '#fff', cursor: 'pointer', fontSize: 12,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}
+              >
+                <X size={11} />
+              </button>
+            </div>
+            <span style={{ fontSize: 11, color: '#64748b' }}>Imagem anexada</span>
+          </div>
+        )}
+
         <div style={{
           position: 'relative', background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(16px)',
           borderRadius: 16,
@@ -609,10 +666,18 @@ export default function ChatPage() {
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px' }}>
             <button
-              aria-label="Anexar arquivo"
-              style={{ background: 'transparent', border: 'none', color: '#a3a3a3', cursor: 'pointer', padding: 8, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 44, minHeight: 44 }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = '#fff' }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#a3a3a3' }}
+              aria-label="Anexar imagem"
+              onClick={() => fileInputRef.current?.click()}
+              style={{
+                background: imageFile ? 'rgba(59,130,246,0.15)' : 'transparent',
+                border: imageFile ? '1px solid rgba(59,130,246,0.4)' : 'none',
+                color: imageFile ? '#60a5fa' : '#a3a3a3',
+                cursor: 'pointer', padding: 8, borderRadius: 8,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                minWidth: 44, minHeight: 44,
+              }}
+              onMouseEnter={e => { if (!imageFile) { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = '#fff' } }}
+              onMouseLeave={e => { if (!imageFile) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#a3a3a3' } }}
             >
               <Paperclip size={18} />
             </button>
