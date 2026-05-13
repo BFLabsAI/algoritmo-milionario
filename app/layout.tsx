@@ -1,10 +1,15 @@
 // app/layout.tsx
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Algoritmo Milionário — Hub de IA para Infoprodutores',
   description: 'Algoritmo Milionário é a plataforma de inteligência artificial para criação de infoprodutos, copywriting e marketing digital. Chat multi-modelo, geração de imagens, ebooks e agentes especializados.',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -279,7 +279,7 @@ export default function ChatPage() {
   const sendActive = Boolean(inputValue.trim()) && !streaming
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%' }}>
+    <div style={{ display: 'flex', flexDirection: 'row', width: '100%', height: '100%', position: 'relative' }}>
       <ChatHistorySidebar
         activeCid={convId}
         onSelect={handleSelectConversation}
@@ -305,9 +305,9 @@ export default function ChatPage() {
       )}
 
       {/* Top Bar */}
-      <div style={{ width: '100%', padding: '16px 24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 12, position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'flex-end', minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, overflowX: 'auto', maxWidth: '100%', padding: '4px 2px', scrollbarWidth: 'none' }}>
+      <div style={{ width: '100%', padding: '12px 16px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', gap: 8, position: 'absolute', top: 0, left: 0, right: 0, zIndex: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'flex-end', minWidth: 0, flex: 1 }}>
+        <div className="toolbar-rail" style={{ flex: 1, justifyContent: 'flex-end', padding: '4px 2px' }}>
           {MODELS.map(m => {
             const active = model === m.slug
             return (
@@ -377,12 +377,12 @@ export default function ChatPage() {
                   onMouseLeave={() => showCopy && setHoveredMsgId(prev => prev === msg.id ? null : prev)}
                   style={{
                     position: 'relative',
-                    maxWidth: '85%', padding: '14px 18px', borderRadius: 16,
+                    maxWidth: '85%', minWidth: 0, padding: '14px 18px', borderRadius: 16,
                     background: msg.role === 'user' ? 'rgba(59, 130, 246, 0.9)' : 'rgba(0,0,0,0.6)',
                     backdropFilter: 'blur(12px)',
                     border: msg.role === 'user' ? 'none' : '1px solid rgba(255,255,255,0.1)',
                     color: '#fff', fontSize: 15, lineHeight: 1.6,
-                    wordBreak: 'break-word',
+                    wordBreak: 'break-word', overflow: 'hidden',
                     boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
                     animation: 'slideUpFade 0.25s ease-out',
                   }}
@@ -439,7 +439,7 @@ export default function ChatPage() {
       )}
 
       {/* Input Box */}
-      <div style={{ width: '100%', maxWidth: 800, padding: '0 16px', marginBottom: messages.length === 0 ? '15vh' : '24px', zIndex: 10 }}>
+      <div style={{ width: '100%', maxWidth: 800, padding: '0 16px', paddingBottom: 'max(24px, env(safe-area-inset-bottom, 12px))', marginBottom: messages.length === 0 ? 'clamp(40px, 10vh, 80px)' : 0, zIndex: 10 }}>
         {/* Agent Selector — above input */}
         <div ref={dropdownRef} style={{ position: 'relative', marginBottom: 10, display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 6 }}>
           <span style={{ fontSize: 11, fontWeight: 600, color: '#94a3b8', letterSpacing: '0.6px', textTransform: 'uppercase', paddingLeft: 4 }}>
@@ -491,7 +491,7 @@ export default function ChatPage() {
             <div
               style={{
                 position: 'absolute', bottom: 'calc(100% + 6px)', left: 0,
-                minWidth: 280, maxHeight: 380, overflowY: 'auto',
+                minWidth: 'min(280px, calc(100vw - 32px))', maxHeight: 380, overflowY: 'auto',
                 background: 'rgba(10, 12, 24, 0.95)', backdropFilter: 'blur(16px)',
                 border: '1px solid rgba(255,255,255,0.1)', borderRadius: 12,
                 boxShadow: '0 12px 40px rgba(0,0,0,0.6)', padding: 6, zIndex: 20,
@@ -582,7 +582,8 @@ export default function ChatPage() {
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px' }}>
             <button
-              style={{ background: 'transparent', border: 'none', color: '#a3a3a3', cursor: 'pointer', padding: 8, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              aria-label="Anexar arquivo"
+              style={{ background: 'transparent', border: 'none', color: '#a3a3a3', cursor: 'pointer', padding: 8, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 44, minHeight: 44 }}
               onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.color = '#fff' }}
               onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#a3a3a3' }}
             >
@@ -592,11 +593,12 @@ export default function ChatPage() {
             <button
               onClick={() => handleSend()}
               disabled={!sendActive}
+              aria-label="Enviar mensagem"
               onMouseEnter={() => setSendHovered(true)}
               onMouseLeave={() => setSendHovered(false)}
               style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                padding: '8px', borderRadius: '10px', border: 'none',
+                width: 44, height: 44, padding: '8px', borderRadius: '10px', border: 'none',
                 background: sendActive ? 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)' : 'rgba(255,255,255,0.06)',
                 color: sendActive ? '#fff' : 'rgba(255,255,255,0.3)',
                 cursor: sendActive ? 'pointer' : 'not-allowed',

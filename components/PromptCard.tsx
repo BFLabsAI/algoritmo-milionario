@@ -93,7 +93,6 @@ export default function PromptCard({ prompt }: { prompt: Prompt }) {
           WebkitLineClamp: 4,
           WebkitBoxOrient: 'vertical',
           overflow: 'hidden',
-          minHeight: '6.4em',
         }}
       >
         {prompt.description}

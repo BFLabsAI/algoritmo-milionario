@@ -30,7 +30,13 @@ const NAV = [
   { href: '/dashboard/analisador',      icon: ScanSearch,     label: 'Analista de Ofertas'},
 ]
 
-export default function Sidebar({ user }: { user: User }) {
+interface SidebarProps {
+  user: User
+  isOpen?: boolean
+  onClose?: () => void
+}
+
+export default function Sidebar({ user, isOpen = false, onClose }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -48,21 +54,53 @@ export default function Sidebar({ user }: { user: User }) {
 
   return (
     <aside
+      role="dialog"
+      aria-modal={isOpen ? true : undefined}
+      aria-label="Menu de navegação"
+      id="sidebar-nav"
       style={{
-        width: 'var(--sidebar-w)',
-        minWidth: 'var(--sidebar-w)',
-        height: '100vh',
+        /* Desktop: always visible inline */
+        width: 'var(--sidebar-w-desktop)',
+        minWidth: 'var(--sidebar-w-desktop)',
+        height: '100dvh',
         position: 'relative',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
+        flexShrink: 0,
         background: `radial-gradient(ellipse at 0% 0%, rgba(59,130,246,0.10) 0%, transparent 55%),
                      radial-gradient(ellipse at 100% 100%, rgba(139,92,246,0.10) 0%, transparent 55%),
                      #08090f`,
         borderRight: '1px solid rgba(255,255,255,0.06)',
+        transition: 'transform 0.3s ease',
       }}
+      className={`sidebar-root${isOpen ? ' sidebar-open' : ''}`}
     >
-      {/* Aurora veil — same language as chat / agents pages */}
+      {/* Mobile drawer styles injected via a style tag approach using CSS classes */}
+      <style>{`
+        @media (max-width: 767px) {
+          .sidebar-root {
+            position: fixed !important;
+            left: 0;
+            top: 0;
+            z-index: 50;
+            transform: translateX(-100%);
+            width: var(--sidebar-w-desktop) !important;
+            min-width: var(--sidebar-w-desktop) !important;
+          }
+          .sidebar-root.sidebar-open {
+            transform: translateX(0);
+          }
+        }
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .sidebar-root {
+            width: var(--sidebar-w-tablet) !important;
+            min-width: var(--sidebar-w-tablet) !important;
+          }
+        }
+      `}</style>
+
+      {/* Aurora veil */}
       <div
         className="aurora-bg"
         style={{ position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.6, zIndex: 0 }}
@@ -73,6 +111,7 @@ export default function Sidebar({ user }: { user: User }) {
         <div style={{ padding: '20px 18px 18px' }}>
           <Link
             href="/dashboard"
+            onClick={onClose}
             style={{ display: 'flex', alignItems: 'center', gap: 12, textDecoration: 'none' }}
           >
             <img
@@ -110,7 +149,7 @@ export default function Sidebar({ user }: { user: User }) {
         >
           <div
             style={{
-              fontSize: 10, fontWeight: 700, color: '#64748b',
+              fontSize: 12, fontWeight: 700, color: '#64748b',
               letterSpacing: '0.7px', textTransform: 'uppercase',
               padding: '4px 12px 8px',
             }}
@@ -128,14 +167,15 @@ export default function Sidebar({ user }: { user: User }) {
               <Link
                 key={href}
                 href={href}
+                onClick={onClose}
                 style={{
                   position: 'relative',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 12,
-                  padding: '10px 12px',
+                  padding: '12px 14px',
                   borderRadius: 10,
-                  fontSize: 13.5,
+                  fontSize: 14,
                   fontWeight: active ? 600 : 500,
                   color: active ? '#fff' : '#94a3b8',
                   background: active
@@ -149,14 +189,15 @@ export default function Sidebar({ user }: { user: User }) {
                     : 'none',
                   textDecoration: 'none',
                   transition: 'background 0.18s ease, color 0.18s ease, border-color 0.18s ease',
+                  minHeight: 44,
                 }}
-                onMouseEnter={e => {
+                onFocus={e => {
                   if (active) return
                   const el = e.currentTarget as HTMLElement
                   el.style.background = 'rgba(255,255,255,0.04)'
                   el.style.color = '#e2e8f0'
                 }}
-                onMouseLeave={e => {
+                onBlur={e => {
                   if (active) return
                   const el = e.currentTarget as HTMLElement
                   el.style.background = 'transparent'
@@ -201,6 +242,7 @@ export default function Sidebar({ user }: { user: User }) {
 
           <Link
             href="/dashboard/configuracoes"
+            onClick={onClose}
             style={{
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '8px 10px', borderRadius: 12,
@@ -208,13 +250,14 @@ export default function Sidebar({ user }: { user: User }) {
               border: '1px solid rgba(255,255,255,0.06)',
               background: 'rgba(255,255,255,0.02)',
               transition: 'background 0.18s ease, border-color 0.18s ease',
+              minHeight: 44,
             }}
-            onMouseEnter={e => {
+            onFocus={e => {
               const el = e.currentTarget as HTMLElement
               el.style.background = 'rgba(255,255,255,0.05)'
               el.style.borderColor = 'rgba(255,255,255,0.1)'
             }}
-            onMouseLeave={e => {
+            onBlur={e => {
               const el = e.currentTarget as HTMLElement
               el.style.background = 'rgba(255,255,255,0.02)'
               el.style.borderColor = 'rgba(255,255,255,0.06)'
@@ -241,7 +284,7 @@ export default function Sidebar({ user }: { user: User }) {
               >
                 {name}
               </div>
-              <div style={{ fontSize: 10.5, color: '#64748b', fontWeight: 600, letterSpacing: '0.3px', textTransform: 'uppercase' }}>
+              <div style={{ fontSize: 12, color: '#64748b', fontWeight: 600, letterSpacing: '0.3px', textTransform: 'uppercase' }}>
                 Plano Gratuito
               </div>
             </div>
@@ -250,25 +293,26 @@ export default function Sidebar({ user }: { user: User }) {
 
           <button
             onClick={handleLogout}
-            aria-label="Sair"
+            aria-label="Sair da conta"
             style={{
               marginTop: 6,
               width: '100%',
               display: 'flex', alignItems: 'center', gap: 10,
               padding: '9px 12px', borderRadius: 10,
               background: 'transparent', border: '1px solid transparent',
-              color: '#64748b', fontSize: 12.5, fontWeight: 500,
+              color: '#64748b', fontSize: 13, fontWeight: 500,
               textAlign: 'left', cursor: 'pointer',
               transition: 'background 0.18s ease, color 0.18s ease, border-color 0.18s ease',
               fontFamily: 'inherit',
+              minHeight: 44,
             }}
-            onMouseEnter={e => {
+            onFocus={e => {
               const el = e.currentTarget as HTMLElement
               el.style.background = 'rgba(239,68,68,0.08)'
               el.style.color = '#fca5a5'
               el.style.borderColor = 'rgba(239,68,68,0.2)'
             }}
-            onMouseLeave={e => {
+            onBlur={e => {
               const el = e.currentTarget as HTMLElement
               el.style.background = 'transparent'
               el.style.color = '#64748b'

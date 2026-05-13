@@ -174,6 +174,62 @@ O ícone "M" com gradiente CSS na página de login foi substituído pela logo co
 
 ---
 
+### [2026-05-13 16:00] — Responsividade: implementação completa (7 fases)
+
+**Descrição:**
+Execução integral do plano de responsividade documentado em `context-docs/plano-responsividade.md`. O app não tinha nenhum suporte real a mobile — layouts com larguras fixas em px, sidebar de 260px sempre visível, grids hard-coded, `100vh` quebrando no iOS Safari, botões abaixo de 44px e sem sistema de breakpoints. Foram executadas 7 fases cobrindo todos os 22 arquivos auditados, totalizando ~47 problemas P0 e 58 P1 resolvidos.
+
+Estratégia adotada: **Tailwind v4 puro** — substituição gradual de inline styles por classes Tailwind + CSS custom properties responsivos.
+
+Principais mudanças estruturais:
+- `globals.css` ganhou tokens responsivos (`--sidebar-w`, `--gutter`, `--fs-h1/h2/h3`, `--vh-fix`), classes utilitárias (`.responsive-shell`, `.grid-cards-sm/md/lg`, `.generator-shell`, `.modal`, `.toolbar-rail`), bumps de touch target (`.btn` para 44px, `.btn-touch` 48px) e guards de `prefers-reduced-motion` + `@supports backdrop-filter`
+- `Sidebar.tsx` convertida em drawer mobile (fixed + `translateX(-100%)` abaixo de 768px, abre via hamburger)
+- Criados `MobileTopBar.tsx` (app bar mobile com hamburger 48px) e `DrawerBackdrop.tsx` (overlay de fechamento)
+- `DashboardShell.tsx` extraído como Client Component para gerenciar estado do drawer
+- Todos os `100vh` substituídos por `100dvh` (fix iOS Safari)
+- Grids hard-coded convertidos para `auto-fill minmax(Xpx, 1fr)` em todo o app
+- Generators (`ImageGenerator`, `EbookGenerator`) empilham abaixo de 960px via `.generator-shell`
+- Chat: model pills em `.toolbar-rail` com scroll horizontal, input com `safe-area-inset-bottom`, send button 44px
+- `ChatHistorySidebar` virou drawer mobile com mesmo padrão da sidebar principal
+- `EbookViewer`: breakpoint 1080px → 768px, fallback "Abrir PDF em nova aba" para touch
+- Todas as páginas de dashboard: paddings convertidos para `clamp()`, tabs em `.toolbar-rail`, headers com `flexWrap`
+
+**Arquivos criados:**
+- `components/MobileTopBar.tsx` — app bar mobile com hamburger
+- `components/DrawerBackdrop.tsx` — overlay do drawer
+- `app/dashboard/DashboardShell.tsx` — shell client com estado de drawer
+
+**Arquivos alterados:**
+- `app/globals.css` — tokens responsivos, classes utilitárias, touch targets, guards de acessibilidade
+- `app/layout.tsx` — `export const viewport` com `width: device-width, initialScale: 1`
+- `app/dashboard/layout.tsx` — integração do drawer pattern, `MobileTopBar`, `DrawerBackdrop`
+- `components/Sidebar.tsx` — drawer mobile, touch targets ≥ 44px, `100vh` → `100dvh`, fonts bump
+- `app/page.tsx` — grids colapsam no mobile, `100vh` → `100dvh`, hamburger e CTAs 44px+
+- `app/login/page.tsx` — `100vh` → `100dvh`, submit → `.btn-touch`, tipografia `clamp()`
+- `app/register/page.tsx` — idem login
+- `app/forgot-password/page.tsx` — idem login
+- `app/dashboard/chat/page.tsx` — model pills `.toolbar-rail`, input safe-area, send button 44px
+- `app/dashboard/agentes/page.tsx` — `.responsive-shell`, grid auto-fill, H1 `var(--fs-h1)`
+- `components/ChatHistorySidebar.tsx` — drawer pattern, delete button sempre visível 44×44px
+- `components/MarkdownRenderer.tsx` — `min-width: 0`, `overflow-wrap: anywhere`, scroll em tabelas
+- `components/ImageGenerator.tsx` — `.generator-shell` (stack <960px), `minHeight` removido
+- `components/ImageGallery.tsx` — grid `minmax(140px)`, modal full-screen ≤639px, footer `flexWrap`
+- `components/EbookGenerator.tsx` — `.generator-shell`, book preview 3D contido
+- `components/EbookGallery.tsx` — grid `minmax(140px)`
+- `components/EbookViewer.tsx` — breakpoint 768px, toolbar `.toolbar-rail`, fallback link PDF
+- `components/DashboardHero.tsx` — `.responsive-shell`, H1 `var(--fs-h1)`, labels sem `nowrap`
+- `components/FeatureCards.tsx` — flex + width fixo → grid `auto-fill minmax(140px, 1fr)`
+- `components/PromptCategoryRail.tsx` — nav buttons ocultos no mobile, `.toolbar-rail`
+- `components/PromptCard.tsx` — `minHeight: 6.4em` removido
+- `app/dashboard/analisador/page.tsx` — loader responsivo, H1s `var(--fs-h1)`, input row `flexWrap`
+- `app/dashboard/criador-produto/page.tsx` — tabs `.toolbar-rail`, paddings `clamp()`, headers `flexWrap`
+- `app/dashboard/planejador/page.tsx` — modal coluna única <768px, calendar list view mobile, toolbar `.toolbar-rail`
+- `app/dashboard/prompts/page.tsx` — padding `clamp()`
+- `app/dashboard/configuracoes/page.tsx` — padding `clamp()`, plan row `flexWrap`
+- `context-docs/plano-responsividade.md` — todas as 7 fases marcadas como `✅ CONCLUÍDA` com resumos
+
+---
+
 ### [2026-05-13 13:00] — Chat: estado vazio exibe logo ao invés de texto
 
 **Descrição:**

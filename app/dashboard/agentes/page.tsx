@@ -22,12 +22,12 @@ export default async function AgentesPage() {
     >
       <div className="aurora-bg" style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }} />
 
-      <div style={{ position: 'relative', zIndex: 1, padding: '40px', width: '100%' }}>
+      <div className="responsive-shell" style={{ position: 'relative', zIndex: 1, width: '100%' }}>
         <div style={{ marginBottom: 32 }}>
           <h1
             style={{
               fontFamily: 'Plus Jakarta Sans, sans-serif',
-              fontSize: 32, fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 8,
+              fontSize: 'var(--fs-h1)', fontWeight: 800, letterSpacing: '-0.02em', marginBottom: 8,
               background: 'linear-gradient(135deg, #ffffff 0%, #94a3b8 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
             }}
@@ -39,7 +39,7 @@ export default async function AgentesPage() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
           {(agents ?? []).map(agent => <ExpertCard key={agent.id} agent={agent} />)}
         </div>
 

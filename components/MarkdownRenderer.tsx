@@ -27,10 +27,10 @@ const components: any = {
   blockquote: ({ children }: any) => <blockquote style={{ borderLeft: '3px solid #0ea5e9', paddingLeft: 16, margin: '12px 0', color: '#94a3b8', fontStyle: 'italic' }}>{children}</blockquote>,
   code: ({ className, children }: any) => {
     const isBlock = /language-/.test(className ?? '')
-    if (isBlock) return <div style={{ margin: '12px 0', borderRadius: 10, overflow: 'hidden', background: '#0f172a', border: '1px solid rgba(255,255,255,0.08)' }}><pre style={{ padding: 16, overflowX: 'auto', margin: 0, fontSize: 13, lineHeight: 1.6, color: '#e2e8f0' }}><code>{children}</code></pre></div>
-    return <code style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 4, padding: '2px 6px', fontSize: 13, color: '#f472b6', fontFamily: 'monospace' }}>{children}</code>
+    if (isBlock) return <div style={{ margin: '12px 0', borderRadius: 10, overflow: 'hidden', background: '#0f172a', border: '1px solid rgba(255,255,255,0.08)', minWidth: 0 }}><pre style={{ padding: 16, overflowX: 'auto', margin: 0, fontSize: 13, lineHeight: 1.6, color: '#e2e8f0', minWidth: 0 }}><code>{children}</code></pre></div>
+    return <code style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 4, padding: '2px 6px', fontSize: 13, color: '#f472b6', fontFamily: 'monospace', overflowWrap: 'anywhere', wordBreak: 'break-all' }}>{children}</code>
   },
-  table: ({ children }: any) => <div style={{ overflowX: 'auto', margin: '12px 0' }}><table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14 }}>{children}</table></div>,
+  table: ({ children }: any) => <div style={{ overflowX: 'auto', margin: '12px 0', minWidth: 0 }}><table style={{ borderCollapse: 'collapse', width: '100%', fontSize: 14, minWidth: 400 }}>{children}</table></div>,
   thead: ({ children }: any) => <thead style={{ background: 'rgba(255,255,255,0.05)' }}>{children}</thead>,
   th: ({ children }: any) => <th style={{ padding: '8px 12px', textAlign: 'left', color: '#94a3b8', fontWeight: 600, borderBottom: '1px solid rgba(255,255,255,0.1)' }}>{children}</th>,
   td: ({ children }: any) => <td style={{ padding: '8px 12px', color: '#e2e8f0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>{children}</td>,

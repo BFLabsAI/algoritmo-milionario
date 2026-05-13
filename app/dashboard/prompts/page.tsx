@@ -57,7 +57,7 @@ export default async function PromptsPage() {
           zIndex: 1,
           maxWidth: 1280,
           margin: '0 auto',
-          padding: '40px 28px 64px',
+          padding: 'clamp(16px, 4vw, 40px) clamp(16px, 4vw, 28px) 64px',
         }}
       >
         <section

@@ -463,7 +463,7 @@ function ItemEditorModal({
           </button>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.1fr) minmax(300px, 0.9fr)', gap: 18 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 18 }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div>
               <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#94a3b8', marginBottom: 6 }}>
@@ -549,7 +549,7 @@ function ItemEditorModal({
               <div style={{ fontSize: 11, fontWeight: 800, color: '#94a3b8', marginBottom: 10, letterSpacing: '0.4px' }}>
                 Status
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: 8 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: 8 }}>
                 {(['pending', 'done', 'skipped'] as const).map(status => {
                   const active = draft.status === status
                   return (
@@ -1158,7 +1158,7 @@ export default function PlanejadorPage() {
           background: `radial-gradient(ellipse at 30% 40%, rgba(99,102,241,0.14) 0%, transparent 55%),
                        radial-gradient(ellipse at 70% 60%, rgba(139,92,246,0.1) 0%, transparent 55%),
                        #080a16`,
-          minHeight: '100vh', position: 'relative',
+          minHeight: '100dvh', position: 'relative',
         }}
       >
         <div className="aurora-bg" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }} />
@@ -1201,7 +1201,7 @@ export default function PlanejadorPage() {
       return (
         <div style={{
           flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          background: '#080a16', minHeight: '100vh', gap: 24, padding: 40,
+          background: '#080a16', minHeight: '100dvh', gap: 24, padding: 40,
         }}>
           <CalendarLoader />
           <div style={{ textAlign: 'center' }}>
@@ -1220,7 +1220,7 @@ export default function PlanejadorPage() {
       return (
         <div style={{
           flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          background: '#080a16', minHeight: '100vh', gap: 16, padding: 40,
+          background: '#080a16', minHeight: '100dvh', gap: 16, padding: 40,
         }}>
           <CalendarLoader />
           <div style={{ textAlign: 'center', maxWidth: 520 }}>
@@ -1242,15 +1242,15 @@ export default function PlanejadorPage() {
           background: `radial-gradient(ellipse at 20% 20%, rgba(139,92,246,0.08) 0%, transparent 50%),
                        radial-gradient(ellipse at 80% 80%, rgba(59,130,246,0.06) 0%, transparent 50%),
                        #080a16`,
-          minHeight: '100vh',
+          minHeight: '100dvh',
           overflow: 'auto',
         }}
       >
         <div className="aurora-bg" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.5 }} />
 
-        <div style={{ position: 'relative', zIndex: 1, padding: '24px 28px', maxWidth: 1540, width: '100%', margin: '0 auto' }}>
+        <div style={{ position: 'relative', zIndex: 1, padding: 'clamp(16px, 4vw, 28px)', maxWidth: 1540, width: '100%', margin: '0 auto' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 18 }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, flexWrap: 'wrap' }}>
               <button
                 onClick={() => { setView('list'); setSelectedPlan(null); setPlanItems([]) }}
                 style={{
@@ -1312,7 +1312,7 @@ export default function PlanejadorPage() {
                 border: '1px solid rgba(148,163,184,0.08)',
               }}
             >
-              <div style={{ display: 'inline-flex', gap: 8, padding: 4, borderRadius: 14, background: 'rgba(15,23,42,0.42)', border: '1px solid rgba(148,163,184,0.08)' }}>
+              <div className="toolbar-rail" style={{ gap: 8, padding: 4, borderRadius: 14, background: 'rgba(15,23,42,0.42)', border: '1px solid rgba(148,163,184,0.08)' }}>
                 {([
                   { id: 'month', label: 'Mês', icon: <LayoutGrid size={14} /> },
                   { id: 'week', label: 'Semana', icon: <CalendarDays size={14} /> },
@@ -1398,7 +1398,7 @@ export default function PlanejadorPage() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
             {planMode === 'month' && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(220px, 100%), 1fr))', gap: 12 }}>
                 {planDays.map(day => (
                   <DayBucketCard
                     key={day.dayNumber}

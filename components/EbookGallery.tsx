@@ -204,7 +204,7 @@ export default function EbookGallery({ ebooks }: { ebooks: EbookRow[] }) {
         <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.05)' }} />
         <span style={{ fontSize: 12, color: '#475569' }}>{ebooks.length} ebook{ebooks.length !== 1 ? 's' : ''}</span>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))', gap: 18 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 18 }}>
         {ebooks.map((eb, i) => <BookCard key={eb.id} ebook={eb} index={i} />)}
       </div>
     </div>

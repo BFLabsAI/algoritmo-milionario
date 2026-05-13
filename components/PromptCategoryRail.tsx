@@ -46,7 +46,7 @@ export default function PromptCategoryRail({
         padding: '22px 22px 24px',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, marginBottom: 16, flexWrap: 'wrap' }}>
         <div>
           <h3
             style={{
@@ -81,11 +81,13 @@ export default function PromptCategoryRail({
         </span>
       </div>
 
+      {/* Rail layout: nav buttons hidden on mobile (< 768px) */}
       <div style={{ display: 'grid', gridTemplateColumns: 'auto minmax(0, 1fr) auto', alignItems: 'center', gap: 12 }}>
         <button
           type="button"
           onClick={() => scrollByCards('left')}
           aria-label="Voltar prompts"
+          className="hide-mobile"
           style={{
             width: 42,
             height: 42,
@@ -105,10 +107,11 @@ export default function PromptCategoryRail({
 
         <div
           ref={railRef}
+          className="toolbar-rail"
           style={{
             display: 'grid',
             gridAutoFlow: 'column',
-            gridAutoColumns: 'minmax(220px, 1fr)',
+            gridAutoColumns: 'minmax(160px, 1fr)',
             gap: 12,
             overflowX: 'auto',
             paddingBottom: 6,
@@ -127,6 +130,7 @@ export default function PromptCategoryRail({
           type="button"
           onClick={() => scrollByCards('right')}
           aria-label="Avançar prompts"
+          className="hide-mobile"
           style={{
             width: 42,
             height: 42,

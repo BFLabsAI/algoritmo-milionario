@@ -177,7 +177,7 @@ export default function EbookViewer({ id, title, status: initialStatus, gammaUrl
                   </p>
                 </div>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                <div className="ebook-toolbar-controls" style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                   <label style={{
                     display: 'inline-flex',
                     alignItems: 'center',
@@ -262,12 +262,27 @@ export default function EbookViewer({ id, title, status: initialStatus, gammaUrl
                     title={`${title} - prévia`}
                     style={{
                       width: '100%',
-                      height: 'min(84vh, 900px)',
+                      minWidth: 0,
+                      height: 'min(80dvh, 900px)',
                       display: 'block',
                       border: 0,
                       background: '#fff',
                     }}
                   />
+                  {/* Fallback link for touch devices where iframe PDF may not render */}
+                  <div style={{ padding: '10px 16px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', justifyContent: 'center' }}>
+                    <a
+                      href={safeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        fontSize: 13, color: '#60a5fa', textDecoration: 'none', fontWeight: 500,
+                        display: 'inline-flex', alignItems: 'center', gap: 6, minHeight: 44,
+                      }}
+                    >
+                      Abrir PDF em nova aba ↗
+                    </a>
+                  </div>
                 </div>
               </div>
             </section>
@@ -482,13 +497,24 @@ export default function EbookViewer({ id, title, status: initialStatus, gammaUrl
 
       <style>{`
         @keyframes spin { to { transform: rotate(360deg); } }
-        @media (max-width: 1080px) {
+        @media (max-width: 768px) {
           .ebook-preview-grid {
             grid-template-columns: 1fr !important;
           }
           .ebook-preview-aside {
             position: static !important;
             top: auto !important;
+          }
+          .ebook-toolbar-controls {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -webkit-overflow-scrolling: touch;
+          }
+          .ebook-toolbar-controls > * {
+            scroll-snap-align: start;
+            flex-shrink: 0;
           }
         }
       `}</style>

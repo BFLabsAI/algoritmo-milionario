@@ -61,6 +61,7 @@ function ImageModal({ img, onClose }: { img: GalleryImage; onClose: () => void }
     >
       <div
         onClick={e => e.stopPropagation()}
+        className="modal"
         style={{
           position: 'relative',
           background: 'rgba(10,12,22,0.95)',
@@ -68,8 +69,6 @@ function ImageModal({ img, onClose }: { img: GalleryImage; onClose: () => void }
           border: '1px solid rgba(255,255,255,0.1)',
           borderRadius: 20,
           boxShadow: '0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04) inset',
-          maxWidth: 820,
-          width: '100%',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
@@ -91,7 +90,7 @@ function ImageModal({ img, onClose }: { img: GalleryImage; onClose: () => void }
             onClick={onClose}
             aria-label="Fechar"
             style={{
-              width: 30, height: 30, borderRadius: 8,
+              width: 44, height: 44, borderRadius: 8,
               background: 'rgba(255,255,255,0.06)',
               border: '1px solid rgba(255,255,255,0.1)',
               color: '#94a3b8', cursor: 'pointer',
@@ -109,8 +108,8 @@ function ImageModal({ img, onClose }: { img: GalleryImage; onClose: () => void }
         <div style={{
           position: 'relative',
           width: '100%',
-          maxHeight: '65vh',
-          minHeight: 300,
+          maxHeight: '60dvh',
+          minHeight: 200,
           background: 'rgba(0,0,0,0.4)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           overflow: 'hidden',
@@ -129,6 +128,7 @@ function ImageModal({ img, onClose }: { img: GalleryImage; onClose: () => void }
           padding: '14px 18px',
           borderTop: '1px solid rgba(255,255,255,0.07)',
           display: 'flex', alignItems: 'center', gap: 14,
+          flexWrap: 'wrap',
         }}>
           <p style={{
             flex: 1, fontSize: 12.5, color: '#64748b', lineHeight: 1.5,
@@ -251,7 +251,7 @@ export default function ImageGallery({ images }: { images: GalleryImage[] }) {
           <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.05)' }} />
           <span style={{ fontSize: 12, color: '#475569' }}>{images.length} imagens</span>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 14 }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 14 }}>
           {images.map(img => (
             <GalleryCard key={img.id} img={img} onClick={() => setSelected(img)} />
           ))}

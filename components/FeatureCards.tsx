@@ -21,11 +21,11 @@ const glassCard: React.CSSProperties = {
 
 export default function FeatureCards() {
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, justifyContent: 'center' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 20 }}>
       {FEATURES.map(({ href, Icon, label, desc, neon }) => (
         <Link key={href} href={href} style={{ textDecoration: 'none', color: '#fff' }}>
           <div
-            style={{ ...glassCard, width: 160, padding: '28px 16px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.25s ease, box-shadow 0.25s ease', position: 'relative' }}
+            style={{ ...glassCard, padding: '28px 16px', textAlign: 'center', cursor: 'pointer', transition: 'transform 0.25s ease, box-shadow 0.25s ease', position: 'relative' }}
             onMouseEnter={e => {
               const el = e.currentTarget as HTMLDivElement
               el.style.transform = 'translateY(-8px)'

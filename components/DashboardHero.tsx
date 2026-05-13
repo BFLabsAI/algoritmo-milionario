@@ -198,7 +198,7 @@ function ServiceCard({ card }: { card: ServiceCardData }) {
           borderTop: '1px solid rgba(80, 110, 255, 0.12)',
         }}>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', color: '#fff' }}>
+            <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', color: '#fff', wordBreak: 'break-word' }}>
               {card.label}
             </div>
             <div style={{ fontSize: 12, color: 'rgba(180, 190, 255, 0.55)', overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as const }}>
@@ -261,10 +261,10 @@ export default function DashboardHero() {
       </div>
 
       {/* ── CONTEÚDO ── */}
-      <div style={{ padding: '24px 32px 64px', maxWidth: 1200, margin: '0 auto' }}>
+      <div className="responsive-shell" style={{ maxWidth: 1200, margin: '0 auto' }}>
 
         <FadeInUp delay={0}>
-          <h1 style={{ fontSize: 28, fontWeight: 700, margin: '0 0 24px', color: '#fff' }}>
+          <h1 style={{ fontSize: 'var(--fs-h1)', fontWeight: 700, margin: '0 0 24px', color: '#fff' }}>
             Olá, bem-vindo ao Algoritmo Milionário.
           </h1>
         </FadeInUp>

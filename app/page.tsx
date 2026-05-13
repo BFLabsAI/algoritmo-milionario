@@ -221,12 +221,19 @@ function Navbar() {
         <button
           className="hide-desktop"
           onClick={() => setOpen(!open)}
+          aria-label={open ? 'Fechar menu' : 'Abrir menu de navegação'}
+          aria-expanded={open}
           style={{
             background: 'transparent',
             border: 'none',
             color: '#fff',
             cursor: 'pointer',
-            padding: 4,
+            padding: 10,
+            minWidth: 44,
+            minHeight: 44,
+            display: 'inline-flex',
+            alignItems: 'center',
+            justifyContent: 'center',
           }}
         >
           {open ? <X size={24} /> : <Menu size={24} />}
@@ -269,13 +276,17 @@ function Navbar() {
               style={{
                 flex: 1,
                 textAlign: 'center',
-                padding: '10px 0',
+                padding: '12px 0',
                 borderRadius: 14,
                 fontSize: 14,
                 fontWeight: 600,
                 color: '#94a3b8',
                 textDecoration: 'none',
                 border: '1px solid rgba(255,255,255,0.1)',
+                minHeight: 44,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
               Entrar
@@ -286,13 +297,17 @@ function Navbar() {
               style={{
                 flex: 1,
                 textAlign: 'center',
-                padding: '10px 0',
+                padding: '12px 0',
                 borderRadius: 14,
                 fontSize: 14,
                 fontWeight: 700,
                 color: '#fff',
                 textDecoration: 'none',
                 background: GLOW_GRADIENT,
+                minHeight: 44,
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
               Começar Grátis
@@ -510,7 +525,7 @@ function Hero() {
           </div>
 
           {/* Mockup body */}
-          <div style={{ display: 'grid', gridTemplateColumns: '200px 1fr', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20 }}>
             {/* Sidebar mock */}
             <div
               style={{
@@ -541,7 +556,7 @@ function Hero() {
 
             {/* Main mock */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
                 {[1, 2, 3].map((n) => (
                   <div
                     key={n}
@@ -1058,7 +1073,7 @@ function Demonstracao() {
             ))}
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
             {/* Before */}
             <div
               style={{
@@ -1736,7 +1751,7 @@ export default function LandingPage() {
     <main
       style={{
         backgroundColor: '#000000',
-        minHeight: '100vh',
+        minHeight: '100dvh',
         fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif",
         color: '#fff',
         overflowX: 'hidden',

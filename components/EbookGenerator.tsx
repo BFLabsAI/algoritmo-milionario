@@ -176,7 +176,7 @@ function LiveBookPreview({ title, theme, tone, pageCount }: {
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center',
-      gap: 28, padding: 40,
+      gap: 28, padding: 'clamp(16px, 4vw, 40px)', overflow: 'hidden',
     }}>
       {/* 3D book wrapper */}
       <div style={{
@@ -197,7 +197,8 @@ function LiveBookPreview({ title, theme, tone, pageCount }: {
           transform: 'perspective(900px) rotateY(-14deg) rotateX(3deg)',
           transformStyle: 'preserve-3d',
           position: 'relative',
-          width: 200,
+          width: 'min(200px, 40%)',
+          maxWidth: 200,
         }}>
           {/* Page stack (right edge) */}
           <div style={{
@@ -539,8 +540,8 @@ export default function EbookGenerator({ onCreated }: Props) {
   // ── Render ────────────────────────────────────────────────────────────────
 
   return (
-    <div style={{
-      display: 'grid', gridTemplateColumns: '420px 1fr', gap: 0,
+    <div className="generator-shell" style={{
+      gap: 0,
       borderRadius: 24, overflow: 'hidden',
       border: '1px solid rgba(255,255,255,0.08)',
       background: 'linear-gradient(180deg, rgb(16,18,32) 0%, rgb(10,12,22) 100%)',

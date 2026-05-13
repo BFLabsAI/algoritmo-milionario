@@ -16,6 +16,8 @@ type Props = {
   activeCid: string | null
   onSelect: (cid: string | null) => void
   refreshKey?: number
+  isOpen?: boolean
+  onClose?: () => void
 }
 
 function relativeTime(iso: string): string {
@@ -30,11 +32,9 @@ function relativeTime(iso: string): string {
   return new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })
 }
 
-export default function ChatHistorySidebar({ activeCid, onSelect, refreshKey }: Props) {
+export default function ChatHistorySidebar({ activeCid, onSelect, refreshKey, isOpen = false, onClose }: Props) {
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [loading, setLoading] = useState(true)
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
-  const [newHovered, setNewHovered] = useState(false)
 
   const load = useCallback(async () => {
     const supabase = createClient()
@@ -70,30 +70,52 @@ export default function ChatHistorySidebar({ activeCid, onSelect, refreshKey }: 
 
   return (
     <aside
-      style={{
-        width: 260, minWidth: 260, height: '100%', flexShrink: 0,
-        background: 'rgba(8, 10, 22, 0.7)',
-        backdropFilter: 'blur(12px)',
-        borderRight: '1px solid rgba(255,255,255,0.06)',
-        display: 'flex', flexDirection: 'column',
-        zIndex: 20,
-      }}
+      className={`chat-history-sidebar${isOpen ? ' chat-history-open' : ''}`}
+      aria-label="Histórico de conversas"
     >
+      <style>{`
+        .chat-history-sidebar {
+          width: 260px;
+          min-width: 260px;
+          height: 100%;
+          flex-shrink: 0;
+          background: rgba(8, 10, 22, 0.7);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border-right: 1px solid rgba(255,255,255,0.06);
+          display: flex;
+          flex-direction: column;
+          z-index: 20;
+          transition: transform 0.3s ease;
+        }
+        @media (max-width: 767px) {
+          .chat-history-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100dvh;
+            z-index: 50;
+            transform: translateX(-100%);
+          }
+          .chat-history-sidebar.chat-history-open {
+            transform: translateX(0);
+          }
+        }
+      `}</style>
+
       {/* Header */}
-      <div style={{ padding: '16px 14px 12px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ padding: '16px 14px 12px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', gap: 8 }}>
         <button
-          onClick={() => onSelect(null)}
-          onMouseEnter={() => setNewHovered(true)}
-          onMouseLeave={() => setNewHovered(false)}
+          onClick={() => { onSelect(null); onClose?.() }}
           style={{
-            width: '100%', display: 'flex', alignItems: 'center', gap: 10,
+            flex: 1,
+            display: 'flex', alignItems: 'center', gap: 10,
             padding: '10px 12px', borderRadius: 10,
-            background: newHovered
-              ? 'linear-gradient(135deg, rgba(59,130,246,0.18), rgba(139,92,246,0.14))'
-              : 'rgba(255,255,255,0.04)',
-            border: newHovered ? '1px solid rgba(139,92,246,0.4)' : '1px solid rgba(255,255,255,0.08)',
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.08)',
             color: '#fff', fontSize: 13, fontWeight: 600, cursor: 'pointer',
             transition: 'all 0.18s ease',
+            minHeight: 44,
           }}
         >
           <MessageSquarePlus size={16} />
@@ -117,22 +139,20 @@ export default function ChatHistorySidebar({ activeCid, onSelect, refreshKey }: 
 
         {conversations.map(conv => {
           const active = conv.id === activeCid
-          const hovered = conv.id === hoveredId
           return (
             <div
               key={conv.id}
-              onClick={() => onSelect(conv.id)}
-              onMouseEnter={() => setHoveredId(conv.id)}
-              onMouseLeave={() => setHoveredId(null)}
+              onClick={() => { onSelect(conv.id); onClose?.() }}
               style={{
                 position: 'relative',
                 display: 'flex', alignItems: 'center', gap: 8,
-                padding: '9px 10px', borderRadius: 8, marginBottom: 2,
-                background: active ? 'rgba(139,92,246,0.15)' : (hovered ? 'rgba(255,255,255,0.04)' : 'transparent'),
+                padding: '10px 10px', borderRadius: 8, marginBottom: 2,
+                background: active ? 'rgba(139,92,246,0.15)' : 'transparent',
                 border: active ? '1px solid rgba(139,92,246,0.3)' : '1px solid transparent',
                 color: active ? '#fff' : '#cbd5e1',
                 cursor: 'pointer',
                 transition: 'background 0.15s ease',
+                minHeight: 44,
               }}
             >
               <div style={{ flex: 1, minWidth: 0 }}>
@@ -144,28 +164,28 @@ export default function ChatHistorySidebar({ activeCid, onSelect, refreshKey }: 
                 >
                   {conv.title || 'Conversa sem título'}
                 </div>
-                <div style={{ fontSize: 10, color: '#64748b', marginTop: 2 }}>
+                <div style={{ fontSize: 11, color: '#64748b', marginTop: 2 }}>
                   {relativeTime(conv.updated_at)}
                 </div>
               </div>
 
-              {hovered && (
-                <button
-                  onClick={(e) => handleDelete(conv.id, e)}
-                  aria-label="Excluir conversa"
-                  style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    width: 26, height: 26, borderRadius: 6,
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    color: '#94a3b8', cursor: 'pointer', flexShrink: 0,
-                  }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.2)'; e.currentTarget.style.color = '#fca5a5' }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = '#94a3b8' }}
-                >
-                  <Trash2 size={12} />
-                </button>
-              )}
+              {/* Delete button — always visible on touch, not hover-only */}
+              <button
+                onClick={(e) => handleDelete(conv.id, e)}
+                aria-label="Excluir conversa"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: 44, height: 44, borderRadius: 8,
+                  background: 'transparent',
+                  border: '1px solid transparent',
+                  color: '#64748b', cursor: 'pointer', flexShrink: 0,
+                  transition: 'background 0.15s ease, color 0.15s ease',
+                }}
+                onFocus={e => { e.currentTarget.style.background = 'rgba(239,68,68,0.15)'; e.currentTarget.style.color = '#fca5a5' }}
+                onBlur={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#64748b' }}
+              >
+                <Trash2 size={14} />
+              </button>
             </div>
           )
         })}

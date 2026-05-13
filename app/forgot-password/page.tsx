@@ -27,7 +27,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, background: 'var(--bg)' }}>
+    <div style={{ minHeight: '100dvh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, background: 'var(--bg)' }}>
       <div style={{ width: '100%', maxWidth: 420 }}>
         {/* Logo */}
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
@@ -37,7 +37,7 @@ export default function ForgotPasswordPage() {
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontSize: 24, fontWeight: 900, color: '#fff', margin: '0 auto 16px',
           }}>M</div>
-          <h1 style={{ fontSize: 22, fontWeight: 700 }}>Recuperar senha</h1>
+          <h1 style={{ fontSize: 'clamp(20px, 4vw, 28px)', fontWeight: 700 }}>Recuperar senha</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: 14, marginTop: 6 }}>
             Enviaremos um link para redefinir sua senha
           </p>
@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
             </div>
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-primary btn-touch"
               disabled={loading}
               style={{ width: '100%', justifyContent: 'center', marginTop: 4 }}
             >

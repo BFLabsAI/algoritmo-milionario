@@ -8,7 +8,7 @@ export default async function ConfiguracoesPage() {
   const email = user?.email || ''
 
   return (
-    <div style={{ padding: '40px', maxWidth: 700, width: '100%' }}>
+    <div style={{ padding: 'clamp(16px, 4vw, 40px)', maxWidth: 700, width: '100%' }}>
       <div style={{ marginBottom: 32 }}>
         <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 8 }}>⚙️ Configurações</h1>
         <p style={{ color: 'var(--text-muted)', fontSize: 14 }}>Gerencie seu perfil e assinatura.</p>

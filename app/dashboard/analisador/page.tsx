@@ -326,9 +326,9 @@ function SuggestionItem({ suggestion }: { suggestion: ModelingSuggestion }) {
 function AnalysisLoader() {
   return (
     <div style={{
-      position: 'relative', width: 320, height: 320,
+      position: 'relative', width: 'min(320px, 100%)', height: 'min(320px, 80vw)',
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      flexShrink: 0,
+      flexShrink: 0, maxWidth: '100%',
     }}>
       <div style={{
         position: 'absolute', inset: 10,
@@ -550,7 +550,7 @@ export default function AnalisadorPage() {
       <div
         style={{
           flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          background: pageBg, minHeight: '100vh', position: 'relative',
+          background: pageBg, minHeight: '100dvh', position: 'relative',
         }}
       >
         <div className="aurora-bg" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }} />
@@ -608,7 +608,7 @@ export default function AnalisadorPage() {
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '6px 12px', borderRadius: 999, border: '1px solid rgba(76,201,240,0.22)', background: 'rgba(76,201,240,0.08)', color: '#d8f8ff', fontSize: 12, fontWeight: 700, marginBottom: 14 }}>
               Nosso agente concluiu
             </div>
-            <h1 style={{ fontFamily: "'Plus Jakarta Sans','Inter',sans-serif", fontSize: 28, fontWeight: 800, color: '#fff', margin: '0 0 8px' }}>
+            <h1 style={{ fontFamily: "'Plus Jakarta Sans','Inter',sans-serif", fontSize: 'var(--fs-h1)', fontWeight: 800, color: '#fff', margin: '0 0 8px' }}>
               Análise de Oferta
             </h1>
             <p style={{ maxWidth: 760, margin: '0 auto', color: '#94a3b8', fontSize: 14.5, lineHeight: 1.65 }}>
@@ -693,7 +693,7 @@ export default function AnalisadorPage() {
           <h1
             style={{
               fontFamily: "'Plus Jakarta Sans','Inter',sans-serif",
-              fontSize: 32,
+              fontSize: 'var(--fs-h1)',
               fontWeight: 800,
               color: '#fff',
               margin: '0 0 10px',
@@ -761,7 +761,7 @@ export default function AnalisadorPage() {
                 onClick={handleAnalyze}
                 disabled={!canAnalyze}
                 style={{
-                  minWidth: 180,
+                  minWidth: 'min(180px, 100%)', width: '100%', maxWidth: 260,
                   padding: '14px 18px',
                   background: canAnalyze
                     ? 'linear-gradient(135deg, #4cc9f0, #a855f7, #fbbf24)'

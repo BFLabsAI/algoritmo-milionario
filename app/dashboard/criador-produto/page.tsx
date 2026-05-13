@@ -467,7 +467,7 @@ export default function CriadorProdutoPage() {
       <div
         style={{
           flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          background: pageBg, minHeight: '100vh', position: 'relative',
+          background: pageBg, minHeight: '100dvh', position: 'relative',
         }}
       >
         <div className="aurora-bg" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }} />
@@ -562,9 +562,9 @@ export default function CriadorProdutoPage() {
         }}
       >
         <div className="aurora-bg" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.5 }} />
-        <div style={{ position: 'relative', zIndex: 1, padding: '24px 28px', maxWidth: 960, width: '100%', margin: '0 auto' }}>
+        <div style={{ position: 'relative', zIndex: 1, padding: 'clamp(16px, 4vw, 28px)', maxWidth: 960, width: '100%', margin: '0 auto' }}>
           {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 24, flexWrap: 'wrap' }}>
             <button
               onClick={() => { setView('list'); setProduct(null) }}
               style={{
@@ -608,7 +608,7 @@ export default function CriadorProdutoPage() {
           </div>
 
           {/* Tabs */}
-          <div style={{ display: 'flex', gap: 4, marginBottom: 24, borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: 0 }}>
+          <div className="toolbar-rail" style={{ gap: 4, marginBottom: 24, borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: 0 }}>
             {TABS.map(tab => (
               <button
                 key={tab.id}
@@ -765,8 +765,8 @@ export default function CriadorProdutoPage() {
         }}
       >
         <div className="aurora-bg" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.5 }} />
-        <div style={{ position: 'relative', zIndex: 1, padding: '28px', maxWidth: 700, width: '100%', margin: '0 auto' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 28 }}>
+        <div style={{ position: 'relative', zIndex: 1, padding: 'clamp(16px, 4vw, 28px)', maxWidth: 700, width: '100%', margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 28, flexWrap: 'wrap' }}>
             <button
               onClick={() => { setView('list'); setError(null) }}
               style={{
@@ -821,8 +821,8 @@ export default function CriadorProdutoPage() {
                 />
               </div>
 
-              <div style={{ display: 'flex', gap: 14 }}>
-                <div style={{ flex: 2 }}>
+              <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+                <div style={{ flex: 2, minWidth: 180 }}>
                   <label style={labelStyle}>Mercado / nicho *</label>
                   <input
                     type="text"
@@ -903,14 +903,14 @@ export default function CriadorProdutoPage() {
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: pageBg, overflow: 'auto' }}>
       <div className="aurora-bg" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0.5 }} />
-      <div style={{ position: 'relative', zIndex: 1, padding: '28px', maxWidth: 1200, width: '100%', margin: '0 auto' }}>
+      <div style={{ position: 'relative', zIndex: 1, padding: 'clamp(16px, 4vw, 28px)', maxWidth: 1200, width: '100%', margin: '0 auto' }}>
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28, flexWrap: 'wrap', gap: 12 }}>
           <div>
             <h1
               style={{
                 fontFamily: "'Plus Jakarta Sans','Inter',sans-serif",
-                fontSize: 28, fontWeight: 800, color: '#fff', margin: 0,
+                fontSize: 'var(--fs-h1)', fontWeight: 800, color: '#fff', margin: 0,
                 background: 'linear-gradient(135deg, #ffffff 0%, #94a3b8 100%)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
               }}

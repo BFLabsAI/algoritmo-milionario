@@ -37,10 +37,11 @@ function AtomLoader() {
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center',
-      justifyContent: 'center', gap: 36, height: '100%', minHeight: 380,
+      justifyContent: 'center', gap: 36, height: '100%', minHeight: 280,
+      padding: '24px 16px',
     }}>
       {/* Orbital element — SVG rings + HTML glass card */}
-      <div style={{ position: 'relative', width: 420, height: 320 }}>
+      <div style={{ position: 'relative', width: 'min(420px, 90vw)', height: 'min(320px, 50vw)', maxWidth: '100%', overflow: 'visible' }}>
 
         {/* SVG: orbital rings + sparkle nodes */}
         <svg
@@ -217,11 +218,8 @@ export default function ImageGenerator() {
   const active = Boolean(prompt.trim()) && !loading
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: '400px 1fr',
+    <div className="generator-shell" style={{
       gap: 0,
-      minHeight: 560,
       borderRadius: 24,
       overflow: 'hidden',
       border: '1px solid rgba(255,255,255,0.08)',
@@ -397,7 +395,7 @@ export default function ImageGenerator() {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         position: 'relative', overflow: 'hidden',
         background: 'radial-gradient(ellipse at 50% 0%, rgba(139,92,246,0.06) 0%, transparent 60%)',
-        minHeight: 560,
+        minHeight: 320,
       }}>
         {loading ? (
           <AtomLoader />
